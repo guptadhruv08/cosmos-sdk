@@ -4,7 +4,6 @@ package simapp
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -262,7 +261,8 @@ func NewSimApp(
 
 	// register the streaming service with the BaseApp
 	if err := bApp.SetStreamingService(appOpts, appCodec, keys); err != nil {
-		panic(fmt.Errorf("failed to load state streaming: %w", err))
+		logger.Error("failed to load state streaming", "err", err)
+		os.Exit(1)
 	}
 
 	app := &SimApp{
@@ -517,7 +517,8 @@ func NewSimApp(
 
 	if loadLatest {
 		if err := app.LoadLatestVersion(); err != nil {
-			panic(fmt.Errorf("error loading last version: %w", err))
+			logger.Error("error on loading last version", "err", err)
+			os.Exit(1)
 		}
 	}
 
